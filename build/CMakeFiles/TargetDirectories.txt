@@ -1,0 +1,2 @@
+/home/tony/workspace/C/VTXRTOS/build/CMakeFiles/edit_cache.dir
+/home/tony/workspace/C/VTXRTOS/build/CMakeFiles/rebuild_cache.dir
