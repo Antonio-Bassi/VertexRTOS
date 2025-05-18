@@ -88,6 +88,6 @@ typedef struct gpio_driver
     const GPIO_Err_T    (*ReleasePin)(GPIO_Handle_T *hgpio);
 }GPIO_Driver_T;
 
-GPIO_Driver_T *GPIO_IF;
+GPIO_Driver_T *GPIO_Driver;
 
 #endif /* GPIO_H_ */

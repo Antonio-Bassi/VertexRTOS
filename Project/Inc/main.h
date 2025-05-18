@@ -51,7 +51,7 @@ typedef union soft_ymm
     f64 DoubleAlias[4U];
 }Soft_YMM_T;
 
-typedef union soft_ymm
+typedef union soft_zmm
 {
     u8  ByteAlias[64U];
     u32 WordAlias[32U];
