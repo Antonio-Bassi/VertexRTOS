@@ -57,7 +57,7 @@ typedef enum gpio_pin_id
 
 typedef union gpio_config
 {
-    struct gpio_config_bitfield
+    struct
     {
         u32 Mode          : 2;
         u32 Drive         : 1;
@@ -65,7 +65,7 @@ typedef union gpio_config
         u32 PullType      : 2;
         u32 AltFunction   : 4;
         u32 Reserved      : 24;
-    }Bit;
+    };
     u32 Word;
 }GPIO_Config_T;
 

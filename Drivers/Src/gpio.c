@@ -27,9 +27,15 @@ static GPIO_Err_T GPIO_Reset(void);
 
 static GPIO_Err_T GPIO_InitPin(GPIO_PortID_T PortID, GPIO_PinID_T PinID)
 {
-    if( ( PortID < GPIO_PORT_A ) || ( PortID > GPIO_PORT_H ) )  return EGPIO_INVPORT;
-    if( ( PortID < GPIO_PIN_0 ) || ( PortID > GPIO_PIN_15 ) )   return EGPIO_INVPIN;
-    
+    GPIO_Err_T err = EGPIO_INVPORT;
+    if( ( PortID < GPIO_PORT_A ) || ( PortID > GPIO_PORT_H ) )
+    {
+        err = EGPIO_INVPIN;
+        if( ( PortID < GPIO_PIN_0 ) || ( PortID > GPIO_PIN_15 ) )
+        {
 
-    
+
+        }
+    }
+    return err;
 }
