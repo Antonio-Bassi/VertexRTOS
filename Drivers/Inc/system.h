@@ -25,4 +25,14 @@
 #define SYSTICK_CLK_SRC_HCLK    (1UL)
 #define SYSTICK_CLK_SRC_EXTCLK  (0UL)
 
+typedef enum systick_err
+{   
+    ESYSTK_INVARG = -4,
+    ESYSTK_INVPRIO = -3,
+    ESYSTK_INVCLKSRC = -2,
+    ESYSTK_INVTKFREQ = -1,
+    ESYSTK_OK = 0,
+}SysTick_Err_T;
+
+
 #endif /* SYSTICK_H_ */
