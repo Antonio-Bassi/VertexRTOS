@@ -21,11 +21,13 @@ static u32 SysTickFreq = SYSTICK_1KHz_FREQ;
 static u32 SysTickIRPrio = (1UL << __NVIC_PRIO_BITS) - 1UL; /* This equates to 15UL */
 static u32 SysTickCounter = 0UL;
 
+/* SysTick Management Functions */
 static void SysTick_ConfigClkSrc(u32 clockSource);
-static SysTick_Err_T SysTick_UpdateFreq(u32 TickFreq);
-static SysTick_Err_T SysTick_StartTicks(void);
-static SysTick_Err_T SysTick_StopTicks(void);
-static SysTick_Err_T SysTick_ResumeTicks(void);
+static void SysTick_Count(void);
+static System_Err_T SysTick_UpdateFreq(u32 TickFreq);
+static System_Err_T SysTick_StartTicks(void);
+static System_Err_T SysTick_StopTicks(void);
+static System_Err_T SysTick_ResumeTicks(void);
 
 
 static void SysTick_ConfigClkSrc(u32 clockSource)
@@ -35,9 +37,17 @@ static void SysTick_ConfigClkSrc(u32 clockSource)
     return;
 }
 
-static SysTick_Err_T SysTick_UpdateFreq(u32 TickFreq)
+
+static void SysTick_Count(void)
 {
-    SysTick_Err_T Err = ESYSTK_OK;
+    SysTickCounter++;
+    return;
+}
+
+
+static System_Err_T SysTick_UpdateFreq(u32 TickFreq)
+{
+    System_Err_T Err = ESYS_OK;
     const u32 Temp  = SysTickFreq;
     u32 Ticks = 0UL;
 
@@ -51,15 +61,16 @@ static SysTick_Err_T SysTick_UpdateFreq(u32 TickFreq)
             /* Restore previous value and exit with error code */
             SysTickFreq = Temp;
             /* Update error code and exit */
-            Err = ESYSTK_INVTKFREQ;
+            Err = ESYS_INVSYSTKFREQ;
         }
     }
     return Err;
 }
 
-static SysTick_Err_T SysTick_StartTicks(void)
+
+static System_Err_T SysTick_StartTicks(void)
 {
-    SysTick_Err_T Err = ESYSTK_INVTKFREQ;
+    System_Err_T Err = ESYS_INVSYSTKFREQ;
     const u32 Ticks = ( RCC_Driver->GetSystemCoreCLock() / ( 1000UL / SysTickFreq) );
     u32 PriorityGroup = 0UL;
 
@@ -71,7 +82,13 @@ static SysTick_Err_T SysTick_StartTicks(void)
     {
         PriorityGroup = NVIC_GetPriorityGrouping();
         NVIC_SetPriority(SysTick_IRQn, NVIC_EncodePriority(PriorityGroup, SysTickIRPrio, 0U) );
-        Err = ESYSTK_OK;
+        Err = ESYS_OK;
     }
     return Err;
+}
+
+
+static System_Err_T SystemCoreClockUpdate(const RCC_SysClk_Config_T *pConfig)
+{
+    
 }

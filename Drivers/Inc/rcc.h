@@ -75,12 +75,15 @@ typedef struct rcc_driver
 {
     u32         (*GetSystemCoreCLock)(void);
     RCC_Err_T   (*ConfigSystemClock)(RCC_SysClk_Config_T *Config);
+    RCC_SysClk_Config_T* (*GetSystemClockConfig)(void);
     RCC_Err_T   (*SetAPB1ClockPrescaler)(u8 APB1Prescaler);
     RCC_Err_T   (*SetAPB2ClockPrescaler)(u8 APB2Prescaler);
-    RCC_Err_T   (*ConfigRealTimeClock)(void); // TODO: implement this.
+    RCC_Err_T   (*ConfigRealTimeClock)(void);
     RCC_Err_T   (*EnablePeriphClock)(u32 PeriphId);
     RCC_Err_T   (*DisablePeriphClock)(u32 PeriphId);
     RCC_Err_T   (*IsPeriphClkEnabled)(u32 PeriphId);
 }RCC_Driver_T;
+
+extern RCC_Driver_T* RCC_Driver;
 
 #endif /* RCC_H_ */
