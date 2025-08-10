@@ -17,18 +17,19 @@
 #define NVIC_PRIORITYGROUP_3         0x00000004U /*!< 3 bits for pre-emption priority, 1 bits for subpriority */
 #define NVIC_PRIORITYGROUP_4         0x00000003U /*!< 4 bits for pre-emption priority,  0 bits for subpriority */
 
+/* --- SysTick Driver API ---------------------------------------------------------------- */
+
 static u32 SysTickFreq = SYSTICK_1KHz_FREQ;
 static u32 SysTickIRPrio = (1UL << __NVIC_PRIO_BITS) - 1UL; /* This equates to 15UL */
 static u32 SysTickCounter = 0UL;
 
-/* SysTick Management Functions */
+static System_Err_T SysTick_UpdateFreq(u32 TickFreq);
+static System_Err_T SysTick_Start(void);
+static System_Err_T SysTick_RegisterCallback(SYSTICK_HANDLER_CALLBACK_T pCallback);
 static void SysTick_ConfigClkSrc(u32 clockSource);
 static void SysTick_Count(void);
-static System_Err_T SysTick_UpdateFreq(u32 TickFreq);
-static System_Err_T SysTick_StartTicks(void);
-static System_Err_T SysTick_StopTicks(void);
-static System_Err_T SysTick_ResumeTicks(void);
-
+static void SysTick_Stop(void);
+static void SysTick_Resume(void);
 
 static void SysTick_ConfigClkSrc(u32 clockSource)
 {
@@ -68,7 +69,7 @@ static System_Err_T SysTick_UpdateFreq(u32 TickFreq)
 }
 
 
-static System_Err_T SysTick_StartTicks(void)
+static System_Err_T SysTick_Start(void)
 {
     System_Err_T Err = ESYS_INVSYSTKFREQ;
     const u32 Ticks = ( RCC_Driver->GetSystemCoreCLock() / ( 1000UL / SysTickFreq) );
@@ -82,13 +83,32 @@ static System_Err_T SysTick_StartTicks(void)
     {
         PriorityGroup = NVIC_GetPriorityGrouping();
         NVIC_SetPriority(SysTick_IRQn, NVIC_EncodePriority(PriorityGroup, SysTickIRPrio, 0U) );
+        NVIC_EnableIRQ(SysTick_IRQn);
         Err = ESYS_OK;
     }
     return Err;
 }
 
 
-static System_Err_T SystemCoreClockUpdate(const RCC_SysClk_Config_T *pConfig)
+static void SysTick_Stop(void)
 {
-    
+    /* SYST_CSR register, for more details refer to the Architecture Reference Manual, page 621 */
+    SysTick->CTRL &= (~SysTick_CTRL_ENABLE_Msk);
+    return;
+}
+
+
+static void SysTick_Resume(void)
+{
+    /* SYST_CSR register, for more details refer to the Architecture Reference Manual, page 621 */
+    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
+    return;
+}
+
+/* --- System Core Driver API ---------------------------------------------------------------- */
+static System_Err_T SysCore_ClockUpdate(const RCC_SysClk_Config_T *pConfig)
+{
+    /** TODO: Finish error handling */
+    RCC_Err_T RCC_Err = RCC_Driver->ConfigSystemClock(pConfig);
+    return ESYS_OK;
 }

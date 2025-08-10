@@ -19,7 +19,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include <stm32f411xx_it.h>
-
+#include <system.h>
 /******************************************************************************/
 /*           Cortex-M4 Processor Interruption and Exception Handlers          */
 /******************************************************************************/
@@ -142,6 +142,8 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
+    System->SystemTick->Count();
+
 
 }
 
